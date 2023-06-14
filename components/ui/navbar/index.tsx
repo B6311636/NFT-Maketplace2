@@ -5,9 +5,10 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { useAccount, useNetwork } from '@hooks/web3';
 import ActiveLink from '../link';
 import Walletbar from './Walletbar';
+import Link from 'next/link';
 
 const navigation = [
-  { name: 'Marketplace', href: '/', current: true },
+  { name: 'Marketplace', href: '/market/marketplace', current: true },
   { name: 'Create', href: '/nft/create', current: false }
 ]
 
@@ -37,13 +38,15 @@ export default function Navbar() {
                 </Disclosure.Button>
               </div>
               <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                {/* <div className="flex-shrink-0 flex items-center">
-                  <img
-                    className="hidden lg:block h-10 w-auto"
-                    src="/images/page_logo.png"
-                    alt="Workflow"
-                  />
-                </div> */}
+                <div className="flex-shrink-0 flex items-center">
+                  <Link href='/'>
+                    <img
+                      className="hidden lg:block h-10 w-18"
+                      src="/images/page_logo.png"
+                      alt="Workflow"
+                    />
+                  </Link>
+                </div>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
@@ -69,11 +72,11 @@ export default function Navbar() {
                     <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400" fill="currentColor" viewBox="0 0 8 8">
                       <circle cx={4} cy={4} r={3} />
                     </svg>
-                    { network.isLoading ?
+                    {network.isLoading ?
                       "Loading..." :
                       account.isInstalled ?
-                      network.data :
-                      "Install Web3 Wallet"
+                        network.data :
+                        "Install Web3 Wallet"
                     }
                   </span>
                 </div>

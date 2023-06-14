@@ -16,7 +16,7 @@ contract NftMarket is ERC721URIStorage, Ownable {
     }
 
     uint public listingPrice = 0.025 ether;
-    // address payable contractCreater;
+    address payable contractCreater;
 
     Counters.Counter private _listedItems;
     Counters.Counter private _tokenIds;
@@ -38,7 +38,7 @@ contract NftMarket is ERC721URIStorage, Ownable {
     );
 
     constructor() ERC721("CreaturesNFT", "CNFT") {
-        // contractCreater = payable(msg.sender)
+        contractCreater = payable(msg.sender);
     }
 
     function setListingPrice(uint newPrice) external onlyOwner {
@@ -46,15 +46,9 @@ contract NftMarket is ERC721URIStorage, Ownable {
         listingPrice = newPrice;
     }
 
-    // function updateListingPrice(
-    //     uint256 _listingPrice
-    // ) public payable onlyOwner {
-    //     listingPrice = _listingPrice;
-    // }
-
-    // function getListingPrice() public view returns (uint256) {
-    //     return listingPrice;
-    // }
+    function getListingPrice() public view returns (uint256) {
+        return listingPrice;
+    }
 
     function getNftItem(uint tokenId) public view returns (NftItem memory) {
         return _idToNftItem[tokenId];
@@ -115,6 +109,20 @@ contract NftMarket is ERC721URIStorage, Ownable {
 
         return items;
     }
+
+    function getNftsByOwned(address finding) public view returns (NftItem[] memory) {
+        uint ownedItemsCount = ERC721.balanceOf(finding);
+        NftItem[] memory items = new NftItem[](ownedItemsCount);
+
+        for (uint i = 0; i < ownedItemsCount; i++) {
+            uint tokenId = tokenOfOwnerByIndex(msg.sender, i);
+            NftItem storage item = _idToNftItem[tokenId];
+            items[i] = item;
+        }
+
+        return items;
+    }
+
 
     function mintToken(
         string memory tokenURI,
@@ -179,7 +187,7 @@ contract NftMarket is ERC721URIStorage, Ownable {
             tokenId,
             price,
             msg.sender,
-            true // false
+            false
         );
 
         emit NftItemCreated(tokenId, price, msg.sender, true);
